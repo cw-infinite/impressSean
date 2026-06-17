@@ -3,7 +3,6 @@ import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import appCss from "../styles.css?url";
-import "@appwrite.io/pink-icons";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -16,7 +15,7 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "Appwrite + TanStack Start",
+				title: "Impress Sean Project",
 			},
 		],
 		links: [
@@ -37,11 +36,11 @@ export const Route = createRootRoute({
 				rel: "stylesheet",
 				href: "https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:opsz,wght@14..32,100..900&family=Poppins:wght@300;400&display=swap",
 			},
-			{
-				rel: "icon",
-				type: "image/svg+xml",
-				href: "/appwrite.svg",
-			},
+			{ 
+        rel: 'icon', 
+        type: 'image/png', 
+        href: '/favicon.png' 
+      },
 		],
 	}),
 
