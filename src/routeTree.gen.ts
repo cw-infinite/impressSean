@@ -9,12 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as Page2RouteImport } from './routes/page2'
 import { Route as PageRouteImport } from './routes/page'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 
+const Page2Route = Page2RouteImport.update({
+  id: '/page2',
+  path: '/page2',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PageRoute = PageRouteImport.update({
   id: '/page',
   path: '/page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +37,59 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/page': typeof PageRoute
+  '/page2': typeof Page2Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/page': typeof PageRoute
+  '/page2': typeof Page2Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/page': typeof PageRoute
+  '/page2': typeof Page2Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/page'
+  fullPaths: '/' | '/login' | '/page' | '/page2'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/page'
-  id: '__root__' | '/' | '/page'
+  to: '/' | '/login' | '/page' | '/page2'
+  id: '__root__' | '/' | '/login' | '/page' | '/page2'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   PageRoute: typeof PageRoute
+  Page2Route: typeof Page2Route
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/page2': {
+      id: '/page2'
+      path: '/page2'
+      fullPath: '/page2'
+      preLoaderRoute: typeof Page2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/page': {
       id: '/page'
       path: '/page'
       fullPath: '/page'
       preLoaderRoute: typeof PageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   PageRoute: PageRoute,
+  Page2Route: Page2Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
