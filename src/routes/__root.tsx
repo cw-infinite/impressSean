@@ -3,6 +3,7 @@ import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import appCss from "../styles.css?url";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -54,7 +55,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className="bg-[#FAFAFB] font-[Inter] text-sm text-[#56565C]">
-				{children}
+				<AuthProvider>
+				  {children}
+
+				</AuthProvider>
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",
