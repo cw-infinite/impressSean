@@ -23,11 +23,6 @@ function AnimatedLoginForSean() {
   const { login, loading, error, clearError } = useAuth();
   const navigate = useNavigate()
 
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const [formData, setFormData] = useState<LoginFormData>({
-	email: '',  password: '',
-  });
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const cardRef = useRef<HTMLDivElement>(null)
@@ -90,7 +85,7 @@ function AnimatedLoginForSean() {
 	  delay: 1000
 	})
 
-	//  const texts = ['Transition between different text.', 'Hello World!', 'Anime.js 4.4 scrambleText()'];
+	//  const texts = ['Transition between different text.', 'Hello World!', "Welcome Sean!"];
 	// let i = 0;
 	// console.log(texts.length);
 	// const play = () => {
@@ -101,9 +96,8 @@ function AnimatedLoginForSean() {
 	// }
 
 	// play();
-
 	animate(h1Ref.current!, {
-	  innerHTML: scrambleText({ text: "Welcome Sean!" }),
+	  innerHTML: scrambleText({ text: "Welcome Sean!", revealDelay: 1000 }),
 	});
 
 	// h1Ref.current = createScope({root}).add( self => {
@@ -141,25 +135,41 @@ function AnimatedLoginForSean() {
 	})
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-	e.preventDefault()
-	animate('.submit-btn', {
-	  scale: [1, 0.9, 1.05, 1],
-	  backgroundColor: ['#a8b2b8', '#0a54a6', '#7c8489'],
-	  duration: 600,
-	  ease: 'inOutQuad'
-	})
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    animate('.submit-btn', {
+      scale: [1, 0.9, 1.05, 1],
+      backgroundColor: ['#a8b2b8', '#0a54a6', '#7c8489'],
+      duration: 600,
+      ease: 'inOutQuad'
+    })
 
-	
-	try {
-	  await login(formData.email, formData.password);
-	  navigate({ to: '/page' })
-	} catch (err) {
-	  // Error is handled in the context
-	  console.error('Login failed:', err);
-	}
+    const formData = new FormData(e.currentTarget);
+    const allValues = Object.fromEntries(formData.entries());
+    console.log(allValues)
+    try {
+      await login(String(allValues.email), String(allValues.password));
+
+      animate(h1Ref.current!, {
+        innerHTML: scrambleText({ chars: 'numbers', text: 'Hope this is interesting!' }),
+      });
+
+      setTimeout(() => {
+        navigate({ to: '/page' })
+        
+      }, 2000);
+    } catch (err) {
+      // Error is handled in the context
+      console.error('Login failed:', err);
+    }
 
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
 
   return (
 	<div className="min-h-screen bg-gradient-to-br from-slate-900 #b5c3ca #021822 flex items-center justify-center p-6 overflow-hidden relative">
@@ -181,6 +191,7 @@ function AnimatedLoginForSean() {
 		  <form onSubmit={handleSubmit} className="space-y-5">
 			<div className="input-wrap opacity-0">
 			  <input
+				name="email"
 				type="email"
 				placeholder="Email address"
 				value={email}
@@ -190,6 +201,7 @@ function AnimatedLoginForSean() {
 			</div>
 			<div className="input-wrap opacity-0">
 			  <input
+			  	name="password"
 				type="password"
 				placeholder="Password"
 				value={password}
@@ -200,6 +212,7 @@ function AnimatedLoginForSean() {
 			<div className="input-wrap opacity-0">
 			  <button
 				type="submit"
+        onKeyDown={handleKeyDown}
 				className="submit-btn w-full #021822 hover:#075376 text-white font-semibold py-3 rounded-lg transition-colors"
 			  >
 				Sign In
