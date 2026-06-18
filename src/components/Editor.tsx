@@ -18,9 +18,9 @@ const SHAPE_TOOLS: { id: Tool; icon: any; label: string; shortcut: string }[] = 
   { id: 'connect', icon: Link2, label: 'Connector', shortcut: 'L' },
 ];
 
-const CANVAS_W = 1500;
-const CANVAS_H = 900;
-const MAX_HISTORY = 50;
+export const CANVAS_W = 1500;
+export const CANVAS_H = 900;
+export const MAX_HISTORY = 50;
 
 interface HistoryState {
   past: Project[];
