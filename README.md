@@ -1,9 +1,8 @@
-
 # Project: Impress Sean / Figmock (The "How would you build Figma?" Challenge)
 
 ### The Backstory
 
-During a recent job interview, I was asked the question: *"How would you build Figma?"*
+ I was asked the question: *"How would you build Figma?"*
 
 To be honest, I froze. Even though I use Figma daily, I had never stopped to consider the underlying engineering architecture required to build such a powerful tool. While the interview moved on, the question stuck with me and wanted to impress Sean, or at least try.
 
@@ -16,9 +15,9 @@ This repository is the result of that challenge. It represents my attempt to rev
 ### The 5-Day Sprint
 
 This project was built under a tight constraint: **5 days from concept to MVP.**
-To maximize velocity and learning, no testing required, no 100% type-safety, and wrote code with AI-assisted coding to accelerate boilerplate and architecture logic, allowing me to focus on the core interactions and UI flow.
+To maximize velocity and learning, no testing required, no 100% type-safety, and wrote code with AI assistance to accelerate boilerplate and architecture logic, allowing me to focus on the core interactions and UI flow.
 
-### 🛠 Tech Stack
+### Tech Stack
 
 To create a snappy, responsive design experience, I selected:
 
@@ -32,24 +31,24 @@ To create a snappy, responsive design experience, I selected:
 
 ### Key Features (The MVP)
 
-* **Infinite Canvas Simulation:** [Describe your core feature, e.g., drag-and-drop elements].
+* **Infinite Canvas Simulation:**
+  * Drag and Drop
+  * Simple objects: Triangle, Circle, and Rectangle
+  * Connecting objects
+  * Figma style console
+  * Property Pannel
+  * Editor / Reports / Exports
+  * **App write integration Save and Load**
+  * ***AI text box to generate cool canvas. (Important)***
 * **Interaction Layer:** Powered by Anime.js for smooth user feedback.
 * **Data Visualization:** Integrated Recharts to [e.g., show properties/metrics of objects].
 * **Responsive UI:** Fully styled with Tailwind CSS.
 
 ---
 
-### What I Learned
-
-Building this pushed me to understand:
-
-1. **State Management:** How to track coordinates and object properties in real-time.
-2. **Animation Physics:** Using Anime.js to make the UI feel "fluid" rather than "stiff."
-3. **Rapid Integration:** How to bridge the gap between UI frameworks and data libraries.
-
 ### To Sean:
 
-Thank you for asking that question during our interview. It was the catalyst for this project and taught me more about design tool architecture in 5 days than I would have learned in a month of passive research.
+Thank you for asking that question during our converation. It was the catalyst for this project and taught me more about design tool architecture in 5 days than I would have learned in months of passive research.
 
 ---
 
