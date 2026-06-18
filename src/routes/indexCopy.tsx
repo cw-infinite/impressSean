@@ -42,7 +42,7 @@ function App() {
 		return () => {
 			if (!detailsRef.current) return;
 			detailsRef.current.removeEventListener("toggle", updateHeight);
-		}
+		};
 	}, [updateHeight]);
 
 	async function sendPing() {
@@ -56,7 +56,7 @@ function App() {
 				path: "/v1/ping",
 				status: 200,
 				response: JSON.stringify(result),
-			}
+			};
 			setLogs((prevLogs) => [log, ...prevLogs]);
 			setStatus("success");
 		} catch (err) {
@@ -69,7 +69,7 @@ function App() {
 					err instanceof AppwriteException
 						? err.message
 						: "Something went wrong",
-			}
+			};
 			setLogs((prevLogs) => [log, ...prevLogs]);
 			setStatus("error");
 		}
@@ -81,7 +81,7 @@ function App() {
 			className="checker-background flex flex-col items-center p-5"
 			style={{ marginBottom: `${detailHeight}px` }}
 		>
-      {/* Half-pixel translates solves pixel-perfect centering */}
+			{/* Half-pixel translates solves pixel-perfect centering */}
 			<div className="mt-25 flex w-full max-w-[40em] items-center justify-center lg:mt-34 translate-x-[0.5px]">
 				<div className="rounded-[25%] border border-[#19191C0A] bg-[#F9F9FA] p-3 shadow-[0px_9.36px_9.36px_0px_hsla(0,0%,0%,0.04)]">
 					<div className="rounded-[25%] border border-[#FAFAFB] bg-white p-5 shadow-[0px_2px_12px_0px_hsla(0,0%,0%,0.03)] lg:p-9">
@@ -317,5 +317,5 @@ function App() {
 				</details>
 			</aside>
 		</main>
-	)
+	);
 }
