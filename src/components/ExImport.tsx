@@ -1,7 +1,7 @@
 // ============ EXPORT / IMPORT UTILITIES ============
 
 import { COLORS, normalizeProject, uid } from "@/utils/constans";
-import { CANVAS_H, CANVAS_W } from "./Editor";
+import { CANVAS_H, CANVAS_W, getEdgePoint } from "./Editor";
 
 export function escapeXml(str: string) {
 	return str

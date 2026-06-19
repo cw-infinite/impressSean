@@ -793,296 +793,308 @@ export function Editor({
 					</span>
 				</div>
 
-				<div
-					ref={viewportRef}
-					onMouseDown={handViewportMouseDown}
-					style={{
-						flex: 1,
-						overflow: "auto",
-						background: "#eceef1",
-						position: "relative",
-						cursor: tool === "hand" ? "grab" : "default",
-					}}
-				>
+				<div style={{ flex: 1, position: "relative", minHeight: 0 }}>
 					<div
+						ref={viewportRef}
+						onMouseDown={handViewportMouseDown}
 						style={{
-							width: CANVAS_W * zoom + 80,
-							height: CANVAS_H * zoom + 80,
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
+							position: "absolute",
+							inset: 0,
+							overflow: "auto",
+							background: "#eceef1",
+							cursor: tool === "hand" ? "grab" : "default",
 						}}
 					>
 						<div
-							ref={canvasRef}
-							onClick={handleCanvasClick}
 							style={{
-								position: "relative",
-								width: CANVAS_W,
-								height: CANVAS_H,
-								transform: "scale(${zoom})",
-								background: "#fff",
-								borderRadius: 8,
-								boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
-								cursor: cursorForTool,
-								backgroundImage:
-									"radial-gradient(circle, #e5e7eb 1px, transparent 1px)",
-								backgroundSize: "20px 20px",
+								width: CANVAS_W * zoom + 80,
+								height: CANVAS_H * zoom + 80,
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
 							}}
 						>
-							<svg
-								width={CANVAS_W}
-								height={CANVAS_H}
+							<div
+								ref={canvasRef}
+								onClick={handleCanvasClick}
 								style={{
-									position: "absolute",
-									top: 0,
-									left: 0,
-									pointerEvents: "none",
+									position: "relative",
+									width: CANVAS_W,
+									height: CANVAS_H,
+									transform: `scale(${zoom})`,
+									background: "#fff",
+									borderRadius: 8,
+									boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+									cursor: cursorForTool,
+									backgroundImage:
+										"radial-gradient(circle, #e5e7eb 1px, transparent 1px)",
+									backgroundSize: "20px 20px",
 								}}
 							>
-								<defs>
-									<marker
-										id="arrowhead"
-										markerWidth="8"
-										markerHeight="8"
-										refX="6"
-										refY="4"
-										orient="auto"
-									>
-										<path d="M0,0 L8,4 L0,8 Z" fill="#7C3AED" />
-									</marker>
-									<marker
-										id="arrowhead-selected"
-										markerWidth="8"
-										markerHeight="8"
-										refX="6"
-										refY="4"
-										orient="auto"
-									>
-										<path d="M0,0 L8,4 L0,8 Z" fill="#EF4444" />
-									</marker>
-								</defs>
-								{project.connections.map((c) => {
-									const fromEl = elementsById[c.from];
-									const toEl = elementsById[c.to];
-									if (!fromEl || !toEl) return null;
-									const fromCenter = {
-										x: fromEl.x + fromEl.w / 2,
-										y: fromEl.y + fromEl.h / 2,
-									};
-									const toCenter = {
-										x: toEl.x + toEl.w / 2,
-										y: toEl.y + toEl.h / 2,
-									};
-									const p1 = getEdgePoint(fromEl, toCenter.x, toCenter.y);
-									const p2 = getEdgePoint(toEl, fromCenter.x, fromCenter.y);
-									const isSelected = c.id === selectedConnectionId;
-									return (
-										<line
-											key={c.id}
-											x1={p1.x}
-											y1={p1.y}
-											x2={p2.x}
-											y2={p2.y}
-											stroke={isSelected ? "#EF4444" : "#7C3AED"}
-											strokeWidth={isSelected ? 3 : 2}
-											markerEnd={
-												isSelected
-													? "url(#arrowhead-selected)"
-													: "url(#arrowhead)"
-											}
-											style={{ pointerEvents: "auto", cursor: "pointer" }}
-											onClick={(e) => {
-												e.stopPropagation();
-												setSelectedConnectionId(c.id);
-												setSelectedId(null);
-											}}
-										/>
-									);
-								})}
-								{connectFrom && elementsById[connectFrom] && (
-									<circle
-										cx={
-											elementsById[connectFrom].x +
-											elementsById[connectFrom].w / 2
-										}
-										cy={
-											elementsById[connectFrom].y +
-											elementsById[connectFrom].h / 2
-										}
-										r={6}
-										fill="#F97316"
-									/>
-								)}
-							</svg>
-
-							{project.elements.map((el) => (
-								<ElementView
-									key={el.id}
-									el={el}
-									selected={el.id === selectedId}
-									connecting={tool === "connect"}
-									connectArmed={connectFrom === el.id}
-									onMouseDown={(e) => handleElementMouseDown(el, e)}
-									onResizeMouseDown={(e) => startResize(el, e)}
-								/>
-							))}
-
-							{project.comments.map((c, idx) => (
-								<CommentPinView
-									key={c.id}
-									index={idx + 1}
-									comment={c}
-									open={activeCommentId === c.id}
-									onToggle={() =>
-										setActiveCommentId(activeCommentId === c.id ? null : c.id)
-									}
-									onSave={(text) => updateComment(c.id, text)}
-									onDelete={() => deleteComment(c.id)}
-								/>
-							))}
-
-							{draftComment && (
-								<DraftCommentBubble
-									draft={draftComment}
-									onCommit={(text) => {
-										commitComment(
-											draftComment.id,
-											draftComment.x,
-											draftComment.y,
-											text,
-										);
-										setDraftComment(null);
-									}}
-									onCancel={() => setDraftComment(null)}
-								/>
-							)}
-
-							{project.elements.length === 0 && !draftComment && (
-								<div
+								<svg
+									width={CANVAS_W}
+									height={CANVAS_H}
 									style={{
 										position: "absolute",
-										inset: 0,
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "center",
-										color: "#9ca3af",
-										fontSize: 14,
+										top: 0,
+										left: 0,
 										pointerEvents: "none",
 									}}
 								>
-									Pick a tool and click the canvas to add a shape
-								</div>
-							)}
+									<defs>
+										<marker
+											id="arrowhead"
+											markerWidth="8"
+											markerHeight="8"
+											refX="6"
+											refY="4"
+											orient="auto"
+										>
+											<path d="M0,0 L8,4 L0,8 Z" fill="#7C3AED" />
+										</marker>
+										<marker
+											id="arrowhead-selected"
+											markerWidth="8"
+											markerHeight="8"
+											refX="6"
+											refY="4"
+											orient="auto"
+										>
+											<path d="M0,0 L8,4 L0,8 Z" fill="#EF4444" />
+										</marker>
+									</defs>
+									{project.connections.map((c) => {
+										const fromEl = elementsById[c.from];
+										const toEl = elementsById[c.to];
+										if (!fromEl || !toEl) return null;
+										const fromCenter = {
+											x: fromEl.x + fromEl.w / 2,
+											y: fromEl.y + fromEl.h / 2,
+										};
+										const toCenter = {
+											x: toEl.x + toEl.w / 2,
+											y: toEl.y + toEl.h / 2,
+										};
+										const p1 = getEdgePoint(fromEl, toCenter.x, toCenter.y);
+										const p2 = getEdgePoint(toEl, fromCenter.x, fromCenter.y);
+										const isSelected = c.id === selectedConnectionId;
+										return (
+											<line
+												key={c.id}
+												x1={p1.x}
+												y1={p1.y}
+												x2={p2.x}
+												y2={p2.y}
+												stroke={isSelected ? "#EF4444" : "#7C3AED"}
+												strokeWidth={isSelected ? 3 : 2}
+												markerEnd={
+													isSelected
+														? "url(#arrowhead-selected)"
+														: "url(#arrowhead)"
+												}
+												style={{ pointerEvents: "auto", cursor: "pointer" }}
+												onClick={(e) => {
+													e.stopPropagation();
+													setSelectedConnectionId(c.id);
+													setSelectedId(null);
+												}}
+											/>
+										);
+									})}
+									{connectFrom && elementsById[connectFrom] && (
+										<circle
+											cx={
+												elementsById[connectFrom].x +
+												elementsById[connectFrom].w / 2
+											}
+											cy={
+												elementsById[connectFrom].y +
+												elementsById[connectFrom].h / 2
+											}
+											r={6}
+											fill="#F97316"
+										/>
+									)}
+								</svg>
+
+								{project.elements.map((el) => (
+									<ElementView
+										key={el.id}
+										el={el}
+										selected={el.id === selectedId}
+										connecting={tool === "connect"}
+										connectArmed={connectFrom === el.id}
+										onMouseDown={(e) => handleElementMouseDown(el, e)}
+										onResizeMouseDown={(e) => startResize(el, e)}
+									/>
+								))}
+
+								{project.comments.map((c, idx) => (
+									<CommentPinView
+										key={c.id}
+										index={idx + 1}
+										comment={c}
+										open={activeCommentId === c.id}
+										onToggle={() =>
+											setActiveCommentId(activeCommentId === c.id ? null : c.id)
+										}
+										onSave={(text) => updateComment(c.id, text)}
+										onDelete={() => deleteComment(c.id)}
+									/>
+								))}
+
+								{draftComment && (
+									<DraftCommentBubble
+										draft={draftComment}
+										onCommit={(text) => {
+											commitComment(
+												draftComment.id,
+												draftComment.x,
+												draftComment.y,
+												text,
+											);
+											setDraftComment(null);
+										}}
+										onCancel={() => setDraftComment(null)}
+									/>
+								)}
+
+								{project.elements.length === 0 && !draftComment && (
+									<div
+										style={{
+											position: "absolute",
+											inset: 0,
+											display: "flex",
+											alignItems: "center",
+											justifyContent: "center",
+											color: "#9ca3af",
+											fontSize: 14,
+											pointerEvents: "none",
+										}}
+									>
+										Pick a tool and click the canvas to add a shape
+									</div>
+								)}
+							</div>
 						</div>
 					</div>
 
-					{/* Zoom controls */}
+					{/* Fixed overlay layer — sits on top of the scrollable viewport, never scrolls or shifts with pan/zoom */}
 					<div
-						style={{
-							position: "absolute",
-							bottom: 16,
-							right: 16,
-							display: "flex",
-							alignItems: "center",
-							gap: 4,
-							background: "#fff",
-							borderRadius: 10,
-							boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-							padding: 4,
-						}}
+						style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
 					>
-						<button
-							onClick={() =>
-								setZoom((z) => Math.max(0.25, +(z - 0.1).toFixed(2)))
-							}
-							style={{ ...btnIcon, border: "none" }}
-						>
-							<ZoomOut size={15} />
-						</button>
-						<span
-							style={{
-								fontSize: 12,
-								color: "#374151",
-								minWidth: 42,
-								textAlign: "center",
-							}}
-						>
-							{Math.round(zoom * 100)}%
-						</span>
-						<button
-							onClick={() => setZoom((z) => Math.min(2, +(z + 0.1).toFixed(2)))}
-							style={{ ...btnIcon, border: "none" }}
-						>
-							<ZoomIn size={15} />
-						</button>
-					</div>
-
-					{/* Bottom-center floating toolbar (Figma-style) */}
-					<div
-						style={{
-							position: "absolute",
-							bottom: 16,
-							left: "50%",
-							transform: "translateX(-50%)",
-							display: "flex",
-							alignItems: "center",
-							gap: 2,
-							background: "#1f2430",
-							borderRadius: 14,
-							boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
-							padding: 6,
-						}}
-					>
-						{TOOLS.map((t) => (
-							<ToolbarButton
-								key={t.id}
-								active={tool === t.id}
-								title={`${t.label} (${t.shortcut})`}
-								onClick={() => setTool(t.id)}
-							>
-								<t.icon size={17} />
-							</ToolbarButton>
-						))}
-						<div
-							style={{
-								width: 1,
-								height: 22,
-								background: "rgba(255,255,255,0.15)",
-								margin: "0 4px",
-							}}
-						/>
-						{SHAPE_TOOLS.map((t) => (
-							<ToolbarButton
-								key={t.id}
-								active={tool === t.id}
-								title={`${t.label} (${t.shortcut})`}
-								onClick={() => setTool(t.id)}
-							>
-								<t.icon size={17} />
-							</ToolbarButton>
-						))}
-					</div>
-
-					{tool === "connect" && (
+						{/* Zoom controls */}
 						<div
 							style={{
 								position: "absolute",
-								top: 12,
-								left: "50%",
-								transform: "translateX(-50%)",
-								background: "#1f2430",
-								color: "#fff",
-								fontSize: 12,
-								padding: "6px 12px",
-								borderRadius: 8,
+								bottom: 16,
+								right: 16,
+								display: "flex",
+								alignItems: "center",
+								gap: 4,
+								background: "#fff",
+								borderRadius: 10,
+								boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+								padding: 4,
+								pointerEvents: "auto",
 							}}
 						>
-							{connectFrom
-								? "Click another layer to connect it"
-								: "Click a layer to start a connector"}
+							<button
+								onClick={() =>
+									setZoom((z) => Math.max(0.25, +(z - 0.1).toFixed(2)))
+								}
+								style={{ ...btnIcon, border: "none" }}
+							>
+								<ZoomOut size={15} />
+							</button>
+							<span
+								style={{
+									fontSize: 12,
+									color: "#374151",
+									minWidth: 42,
+									textAlign: "center",
+								}}
+							>
+								{Math.round(zoom * 100)}%
+							</span>
+							<button
+								onClick={() =>
+									setZoom((z) => Math.min(2, +(z + 0.1).toFixed(2)))
+								}
+								style={{ ...btnIcon, border: "none" }}
+							>
+								<ZoomIn size={15} />
+							</button>
 						</div>
-					)}
+
+						{/* Bottom-center floating toolbar (Figma-style) */}
+						<div
+							style={{
+								position: "absolute",
+								bottom: 16,
+								left: "50%",
+								transform: "translateX(-50%)",
+								display: "flex",
+								alignItems: "center",
+								gap: 2,
+								background: "#1f2430",
+								borderRadius: 14,
+								boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+								padding: 6,
+								pointerEvents: "auto",
+							}}
+						>
+							{TOOLS.map((t) => (
+								<ToolbarButton
+									key={t.id}
+									active={tool === t.id}
+									title={`${t.label} (${t.shortcut})`}
+									onClick={() => setTool(t.id)}
+								>
+									<t.icon size={17} />
+								</ToolbarButton>
+							))}
+							<div
+								style={{
+									width: 1,
+									height: 22,
+									background: "rgba(255,255,255,0.15)",
+									margin: "0 4px",
+								}}
+							/>
+							{SHAPE_TOOLS.map((t) => (
+								<ToolbarButton
+									key={t.id}
+									active={tool === t.id}
+									title={`${t.label} (${t.shortcut})`}
+									onClick={() => setTool(t.id)}
+								>
+									<t.icon size={17} />
+								</ToolbarButton>
+							))}
+						</div>
+
+						{tool === "connect" && (
+							<div
+								style={{
+									position: "absolute",
+									top: 12,
+									left: "50%",
+									transform: "translateX(-50%)",
+									background: "#1f2430",
+									color: "#fff",
+									fontSize: 12,
+									padding: "6px 12px",
+									borderRadius: 8,
+									pointerEvents: "auto",
+								}}
+							>
+								{connectFrom
+									? "Click another layer to connect it"
+									: "Click a layer to start a connector"}
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 
@@ -1310,7 +1322,11 @@ function ToolbarButton({
 }
 
 // Returns a point on an element's bounding box, on the side facing (towardX, towardY)
-function getEdgePoint(el: CanvasElement, towardX: number, towardY: number) {
+export function getEdgePoint(
+	el: CanvasElement,
+	towardX: number,
+	towardY: number,
+) {
 	const cx = el.x + el.w / 2;
 	const cy = el.y + el.h / 2;
 	const dx = towardX - cx;

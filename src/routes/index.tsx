@@ -10,17 +10,6 @@ import {
 } from "animejs";
 import { useAuth } from "@/contexts/AuthContext";
 
-interface FormErrors {
-	email?: string;
-	password?: string;
-	general?: string;
-}
-
-interface LoginFormData {
-	email: string;
-	password: string;
-}
-
 export const Route = createFileRoute("/")({
 	component: AnimatedLoginForSean,
 });
