@@ -39,7 +39,6 @@ To create a snappy, responsive design experience, I selected:
   * Property Pannel
   * Editor / Reports / Exports
   * **App write integration Save and Load**
-  * ***AI text box to generate cool canvas. (Important)***
 * **Interaction Layer:** Powered by Anime.js for smooth user feedback.
 * **Data Visualization:** Integrated Recharts to [e.g., show properties/metrics of objects].
 * **Responsive UI:** Fully styled with Tailwind CSS.
