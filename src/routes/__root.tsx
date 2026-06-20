@@ -37,11 +37,11 @@ export const Route = createRootRoute({
 				rel: "stylesheet",
 				href: "https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:opsz,wght@14..32,100..900&family=Poppins:wght@300;400&display=swap",
 			},
-			{ 
-        rel: 'icon', 
-        type: 'image/png', 
-        href: '/favicon.png' 
-      },
+			{
+				rel: "icon",
+				type: "image/png",
+				href: "/favicon.png",
+			},
 		],
 	}),
 
@@ -55,10 +55,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className="bg-[#FAFAFB] font-[Inter] text-sm text-[#56565C]">
-				<AuthProvider>
-				  {children}
-
-				</AuthProvider>
+				<AuthProvider>{children}</AuthProvider>
 				{/* <TanStackDevtools
 					config={{
 						position: "bottom-right",

@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestPageRouteImport } from './routes/testPage'
 import { Route as Page2RouteImport } from './routes/page2'
 import { Route as PageRouteImport } from './routes/page'
-import { Route as IndexCopyRouteImport } from './routes/indexCopy'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TestPageRoute = TestPageRouteImport.update({
@@ -30,11 +29,6 @@ const PageRoute = PageRouteImport.update({
   path: '/page',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexCopyRoute = IndexCopyRouteImport.update({
-  id: '/indexCopy',
-  path: '/indexCopy',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,14 +37,12 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/indexCopy': typeof IndexCopyRoute
   '/page': typeof PageRoute
   '/page2': typeof Page2Route
   '/testPage': typeof TestPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/indexCopy': typeof IndexCopyRoute
   '/page': typeof PageRoute
   '/page2': typeof Page2Route
   '/testPage': typeof TestPageRoute
@@ -58,22 +50,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/indexCopy': typeof IndexCopyRoute
   '/page': typeof PageRoute
   '/page2': typeof Page2Route
   '/testPage': typeof TestPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/indexCopy' | '/page' | '/page2' | '/testPage'
+  fullPaths: '/' | '/page' | '/page2' | '/testPage'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/indexCopy' | '/page' | '/page2' | '/testPage'
-  id: '__root__' | '/' | '/indexCopy' | '/page' | '/page2' | '/testPage'
+  to: '/' | '/page' | '/page2' | '/testPage'
+  id: '__root__' | '/' | '/page' | '/page2' | '/testPage'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  IndexCopyRoute: typeof IndexCopyRoute
   PageRoute: typeof PageRoute
   Page2Route: typeof Page2Route
   TestPageRoute: typeof TestPageRoute
@@ -102,13 +92,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PageRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/indexCopy': {
-      id: '/indexCopy'
-      path: '/indexCopy'
-      fullPath: '/indexCopy'
-      preLoaderRoute: typeof IndexCopyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -121,7 +104,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  IndexCopyRoute: IndexCopyRoute,
   PageRoute: PageRoute,
   Page2Route: Page2Route,
   TestPageRoute: TestPageRoute,
