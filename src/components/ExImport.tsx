@@ -1,7 +1,13 @@
 // ============ EXPORT / IMPORT UTILITIES ============
 
-import { COLORS, normalizeProject, uid } from "@/utils/constans";
-import { CANVAS_H, CANVAS_W, getEdgePoint } from "./Editor";
+import {
+	COLORS,
+	DEFAULT_CANVAS_H,
+	DEFAULT_CANVAS_W,
+	normalizeProject,
+	uid,
+} from "@/utils/constans";
+import { getEdgePoint } from "./Editor";
 
 export function escapeXml(str: string) {
 	return str
@@ -70,6 +76,8 @@ export function elementToSVG(el: CanvasElement): string {
 }
 
 export function projectToSVGString(project: Project): string {
+	const w = project.canvasWidth || DEFAULT_CANVAS_W;
+	const h = project.canvasHeight || DEFAULT_CANVAS_H;
 	const connectorsSVG = project.connections
 		.map((c) => {
 			const fromEl = project.elements.find((e) => e.id === c.from);
@@ -88,13 +96,13 @@ export function projectToSVGString(project: Project): string {
 
 	const elementsSVG = project.elements.map(elementToSVG).join("\n");
 
-	return `<svg xmlns="http://www.w3.org/2000/svg" width="${CANVAS_W}" height="${CANVAS_H}" viewBox="0 0 ${CANVAS_W} ${CANVAS_H}">
+	return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
     <defs>
       <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
         <path d="M0,0 L8,4 L0,8 Z" fill="#7C3AED" />
       </marker>
     </defs>
-    <rect x="0" y="0" width="${CANVAS_W}" height="${CANVAS_H}" fill="#ffffff" />
+    <rect x="0" y="0" width="${w}" height="${h}" fill="#ffffff" />
     ${connectorsSVG}
     ${elementsSVG}
   </svg>`;
@@ -104,6 +112,8 @@ export async function rasterizeProjectToCanvas(
 	project: Project,
 	scale = 2,
 ): Promise<HTMLCanvasElement> {
+	const w = project.canvasWidth || DEFAULT_CANVAS_W;
+	const h = project.canvasHeight || DEFAULT_CANVAS_H;
 	const svgString = projectToSVGString(project);
 	const svgBlob = new Blob([svgString], {
 		type: "image/svg+xml;charset=utf-8",
@@ -117,8 +127,8 @@ export async function rasterizeProjectToCanvas(
 			image.src = url;
 		});
 		const canvas = document.createElement("canvas");
-		canvas.width = CANVAS_W * scale;
-		canvas.height = CANVAS_H * scale;
+		canvas.width = w * scale;
+		canvas.height = h * scale;
 		const ctx = canvas.getContext("2d")!;
 		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -151,15 +161,17 @@ export async function exportProjectAsPNG(project: Project) {
 }
 
 export async function exportProjectAsPDF(project: Project) {
+	const w = project.canvasWidth || DEFAULT_CANVAS_W;
+	const h = project.canvasHeight || DEFAULT_CANVAS_H;
 	const canvas = await rasterizeProjectToCanvas(project, 1);
 	const dataUrl = canvas.toDataURL("image/png");
 	const { jsPDF } = await import("jspdf");
 	const pdf = new jsPDF({
-		orientation: CANVAS_W >= CANVAS_H ? "landscape" : "portrait",
+		orientation: w >= h ? "landscape" : "portrait",
 		unit: "px",
-		format: [CANVAS_W, CANVAS_H],
+		format: [w, h],
 	});
-	pdf.addImage(dataUrl, "PNG", 0, 0, CANVAS_W, CANVAS_H);
+	pdf.addImage(dataUrl, "PNG", 0, 0, w, h);
 	pdf.save(`${safeFileName(project.name)}.pdf`);
 }
 

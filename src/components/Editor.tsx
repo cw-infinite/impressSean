@@ -1,8 +1,14 @@
 import {
 	btnIcon,
 	COLORS,
+	DEFAULT_CANVAS_H,
+	DEFAULT_CANVAS_W,
+	inputStyle,
+	labelStyle,
 	makeStyle,
 	makeTypography,
+	MAX_CANVAS_SIZE,
+	MIN_CANVAS_SIZE,
 	nextName,
 	uid,
 } from "@/utils/constans";
@@ -16,6 +22,7 @@ import {
 	MousePointer2,
 	Redo2,
 	Save,
+	SlidersHorizontal,
 	Square,
 	Type,
 	Undo2,
@@ -42,8 +49,6 @@ const SHAPE_TOOLS: { id: Tool; icon: any; label: string; shortcut: string }[] =
 		{ id: "connect", icon: Link2, label: "Connector", shortcut: "L" },
 	];
 
-export const CANVAS_W = 1500;
-export const CANVAS_H = 900;
 export const MAX_HISTORY = 50;
 
 interface HistoryState {
@@ -106,6 +111,9 @@ export function Editor({
 	const dirtyRef = useRef(false);
 	const preInteractionRef = useRef<Project | null>(null);
 	const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	const canvasWidth = project.canvasWidth || DEFAULT_CANVAS_W;
+	const canvasHeight = project.canvasHeight || DEFAULT_CANVAS_H;
 
 	useEffect(() => {
 		setNameEdit(project.name);
@@ -352,6 +360,33 @@ export function Editor({
 				"Removed connector",
 			);
 			setSelectedConnectionId(null);
+		},
+		[commit],
+	);
+
+	const updateCanvasSize = useCallback(
+		(patch: Partial<Pick<Project, "canvasWidth" | "canvasHeight">>) => {
+			commit(
+				(p) => ({
+					...p,
+					canvasWidth:
+						patch.canvasWidth !== undefined
+							? Math.min(
+									MAX_CANVAS_SIZE,
+									Math.max(MIN_CANVAS_SIZE, patch.canvasWidth),
+								)
+							: p.canvasWidth,
+					canvasHeight:
+						patch.canvasHeight !== undefined
+							? Math.min(
+									MAX_CANVAS_SIZE,
+									Math.max(MIN_CANVAS_SIZE, patch.canvasHeight),
+								)
+							: p.canvasHeight,
+				}),
+				"updated",
+				"Resized canvas",
+			);
 		},
 		[commit],
 	);
@@ -807,8 +842,8 @@ export function Editor({
 					>
 						<div
 							style={{
-								width: CANVAS_W * zoom + 80,
-								height: CANVAS_H * zoom + 80,
+								width: canvasWidth * zoom + 80,
+								height: canvasHeight * zoom + 80,
 								display: "flex",
 								alignItems: "center",
 								justifyContent: "center",
@@ -819,8 +854,8 @@ export function Editor({
 								onClick={handleCanvasClick}
 								style={{
 									position: "relative",
-									width: CANVAS_W,
-									height: CANVAS_H,
+									width: canvasWidth,
+									height: canvasHeight,
 									transform: `scale(${zoom})`,
 									background: "#fff",
 									borderRadius: 8,
@@ -832,8 +867,8 @@ export function Editor({
 								}}
 							>
 								<svg
-									width={CANVAS_W}
-									height={CANVAS_H}
+									width={canvasWidth}
+									height={canvasHeight}
 									style={{
 										position: "absolute",
 										top: 0,
@@ -850,7 +885,7 @@ export function Editor({
 											refY="4"
 											orient="auto"
 										>
-											<path d="M0,0 L8,4 L0,8 Z" fill="#7C3AED" />
+											<path d="M0,0 L8,4 L0,8 Z" fill="#7c7c7c" />
 										</marker>
 										<marker
 											id="arrowhead-selected"
@@ -860,7 +895,7 @@ export function Editor({
 											refY="4"
 											orient="auto"
 										>
-											<path d="M0,0 L8,4 L0,8 Z" fill="#EF4444" />
+											<path d="M0,0 L8,4 L0,8 Z" fill="#7C3AED" />
 										</marker>
 									</defs>
 									{project.connections.map((c) => {
@@ -885,7 +920,7 @@ export function Editor({
 												y1={p1.y}
 												x2={p2.x}
 												y2={p2.y}
-												stroke={isSelected ? "#EF4444" : "#7C3AED"}
+												stroke={isSelected ? "#7C3AED" : "#7c7c7c"}
 												strokeWidth={isSelected ? 3 : 2}
 												markerEnd={
 													isSelected
@@ -1277,10 +1312,53 @@ export function Editor({
 				)}
 
 				{!selectedEl && !selectedConnection && (
-					<div style={{ fontSize: 12, color: "#9ca3af", lineHeight: 1.6 }}>
-						Select a layer or connector to see and edit its properties here. Use
-						the toolbar below the canvas to add shapes, draw connectors, leave
-						comments, or pan with the hand tool.
+					<div>
+						<div
+							style={{
+								display: "flex",
+								alignItems: "center",
+								gap: 6,
+								fontSize: 13,
+								fontWeight: 500,
+								marginBottom: 12,
+								color: "#374151",
+							}}
+						>
+							<SlidersHorizontal size={14} /> Canvas
+						</div>
+						<div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+							<div>
+								<label style={labelStyle}>Width</label>
+								<input
+									type="number"
+									min={MIN_CANVAS_SIZE}
+									max={MAX_CANVAS_SIZE}
+									value={canvasWidth}
+									onChange={(e) =>
+										updateCanvasSize({ canvasWidth: Number(e.target.value) })
+									}
+									style={{ ...inputStyle, width: 110 }}
+								/>
+							</div>
+							<div>
+								<label style={labelStyle}>Height</label>
+								<input
+									type="number"
+									min={MIN_CANVAS_SIZE}
+									max={MAX_CANVAS_SIZE}
+									value={canvasHeight}
+									onChange={(e) =>
+										updateCanvasSize({ canvasHeight: Number(e.target.value) })
+									}
+									style={{ ...inputStyle, width: 110 }}
+								/>
+							</div>
+						</div>
+						<div style={{ fontSize: 12, color: "#9ca3af", lineHeight: 1.6 }}>
+							Select a layer or connector to see and edit its properties here.
+							Use the toolbar below the canvas to add shapes, draw connectors,
+							leave comments, or pan with the hand tool.
+						</div>
 					</div>
 				)}
 			</div>

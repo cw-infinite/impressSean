@@ -26,8 +26,17 @@ export function SwatchRow({
 	value: string;
 	onChange: (c: string) => void;
 }) {
+	const isPreset = COLORS.includes(value);
 	return (
-		<div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
+		<div
+			style={{
+				display: "flex",
+				gap: 6,
+				flexWrap: "wrap",
+				alignItems: "center",
+				marginBottom: 6,
+			}}
+		>
 			{COLORS.map((c) => (
 				<div
 					key={c}
@@ -42,6 +51,38 @@ export function SwatchRow({
 					}}
 				/>
 			))}
+			{/* Custom color picker — opens the native OS color dialog and reports a hex value */}
+			<label
+				title="Custom color"
+				style={{
+					width: 20,
+					height: 20,
+					borderRadius: 6,
+					cursor: "pointer",
+					position: "relative",
+					border: !isPreset ? "2px solid #111827" : "1px solid #e5e7eb",
+					background: !isPreset
+						? value
+						: "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)",
+					display: "inline-block",
+				}}
+			>
+				<input
+					type="color"
+					value={/^#([0-9a-f]{6})$/i.test(value) ? value : "#7C3AED"}
+					onChange={(e) => onChange(e.target.value)}
+					style={{
+						position: "absolute",
+						inset: 0,
+						width: "100%",
+						height: "100%",
+						opacity: 0,
+						cursor: "pointer",
+						border: 0,
+						padding: 0,
+					}}
+				/>
+			</label>
 		</div>
 	);
 }
@@ -83,14 +124,20 @@ export function SelectedElementPanel({
 			{el.type === "text" ? (
 				<div style={{ marginBottom: 10 }}>
 					<label style={labelStyle}>Text content</label>
-					<input
+					<textarea
 						value={el.text}
 						onChange={(e) =>
 							onContentChange({
 								text: e.target.value,
 							} as Partial<CanvasElement>)
 						}
-						style={inputStyle}
+						rows={4}
+						style={{
+							...inputStyle,
+							resize: "vertical",
+							minHeight: 70,
+							fontFamily: "inherit",
+						}}
 					/>
 				</div>
 			) : (

@@ -95,6 +95,8 @@ interface Project {
 	createdAt: number;
 	updatedAt: number;
 	thumbnailColor: string;
+	canvasWidth: number;
+	canvasHeight: number;
 	elements: CanvasElement[];
 	connections: Connection[];
 	comments: CommentPin[];
@@ -106,7 +108,7 @@ type ProjectMeta = Pick<
 	"id" | "name" | "createdAt" | "updatedAt" | "thumbnailColor"
 >;
 
-type View = "dashboard" | "editor" | "reports";
+type View = "dashboard" | "create" | "editor" | "reports";
 type SaveStatus = "idle" | "saving" | "saved";
 type Tool =
 	| "select"

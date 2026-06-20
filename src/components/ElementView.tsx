@@ -96,13 +96,18 @@ export function ElementView({
 					textAlign: el.typography.textAlign,
 					color: el.fill,
 					display: "flex",
-					alignItems: "center",
+					alignItems: "flex-start",
 					justifyContent:
 						el.typography.textAlign === "center"
 							? "center"
 							: el.typography.textAlign === "right"
 								? "flex-end"
 								: "flex-start",
+					whiteSpace: "pre-wrap",
+					wordBreak: "break-word",
+					overflow: "hidden",
+					padding: 4,
+					boxSizing: "border-box",
 				}}
 				onMouseDown={onMouseDown}
 				onClick={stopClick}
