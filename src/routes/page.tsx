@@ -27,7 +27,7 @@ import { importProjectFromFile } from "@/components/ExImport";
 const DB_ID = import.meta.env.VITE_APPWRITE_DB_ID;
 const COL_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
 
-// ============ APPWRITE HOOK ============
+// ----------------------- APPWRITE HOOK -----------------------
 function useAppwrite(user: any) {
 	const getProjects = useCallback(async (): Promise<ProjectMeta[]> => {
 		if (!user?.$id) return [];
@@ -144,8 +144,7 @@ export const Route = createFileRoute("/page")({
 	component: RouteComponent,
 });
 
-// ============ MAIN COMPONENT ============
-
+// ----------------------- MAIN COMPONENT -----------------------
 function RouteComponent() {
 	const { user, loading, logout } = useAuth();
 	const navigate = useNavigate();
@@ -331,9 +330,9 @@ function RouteComponent() {
 					saveStatus={saveStatus}
 				/>
 			)}
-			{view === "reports" && activeProject && (
+			{/* {view === "reports" && activeProject && (
 				<Reports project={activeProject} allProjects={projects} />
-			)}
+			)} */}
 		</div>
 	);
 }
