@@ -25,12 +25,11 @@ function AnimatedLoginForSean() {
 	const orb2Ref = useRef<HTMLDivElement>(null);
 
 	const h1Ref = useRef<HTMLHeadingElement>(null);
-	const h2Ref = useRef<HTMLHeadingElement>(null);
+	const signinBtn = useRef<HTMLParagraphElement>(null);
 
 	useEffect(() => {
 		if (!cardRef.current) return;
 
-		// v4: animate replaces anime
 		const cardAnim = animate(cardRef.current, {
 			opacity: [0, 1],
 			translateY: [60, 0],
@@ -39,7 +38,6 @@ function AnimatedLoginForSean() {
 			ease: "outElastic(1, .8)",
 		});
 
-		// v4: stagger is now imported directly
 		animate(".input-wrap", {
 			opacity: [0, 1],
 			translateY: [20, 0],
@@ -48,7 +46,6 @@ function AnimatedLoginForSean() {
 			ease: "outQuad",
 		});
 
-		// v4: keyframes work the same but use new syntax
 		animate(orb1Ref.current!, {
 			x: [
 				{ to: 100, duration: 4000 },
@@ -80,26 +77,9 @@ function AnimatedLoginForSean() {
 			delay: 1000,
 		});
 
-		//  const texts = ['Transition between different text.', 'Hello World!', "Welcome Sean!"];
-		// let i = 0;
-		// console.log(texts.length);
-		// const play = () => {
-		//   i = (i + 1) % texts.length;
-		//   animate(h1Ref, {
-		//     innerHTML: scrambleText({ text: texts[i] }),
-		//   });
-		// }
-
-		// play();
 		animate(h1Ref.current!, {
-			innerHTML: scrambleText({ text: "Welcome Sean!", revealDelay: 1000 }),
+			innerHTML: scrambleText({ text: "Welcome Sean!", revealDelay: 500 }),
 		});
-
-		// h1Ref.current = createScope({root}).add( self => {
-
-		// })
-
-		// $button.addEventListener('click', play);
 
 		return () => {
 			cardAnim.revert();
@@ -148,6 +128,14 @@ function AnimatedLoginForSean() {
 				innerHTML: scrambleText({
 					chars: "numbers",
 					text: "Hope this is interesting!",
+				}),
+			});
+
+			animate(signinBtn.current!, {
+				innerHTML: scrambleText({
+					ease: "linear",
+					override: false,
+					text: "Loading...",
 				}),
 			});
 
@@ -218,7 +206,7 @@ function AnimatedLoginForSean() {
 								onKeyDown={handleKeyDown}
 								className="submit-btn w-full #021822 hover:#075376 text-white font-semibold py-3 rounded-lg transition-colors"
 							>
-								Sign In
+								<p ref={signinBtn}>Sign In</p>
 							</button>
 						</div>
 					</form>
