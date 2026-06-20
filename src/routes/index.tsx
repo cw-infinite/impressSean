@@ -120,7 +120,6 @@ function AnimatedLoginForSean() {
 
 		const formData = new FormData(e.currentTarget);
 		const allValues = Object.fromEntries(formData.entries());
-		console.log(allValues);
 		try {
 			await login(String(allValues.email), String(allValues.password));
 

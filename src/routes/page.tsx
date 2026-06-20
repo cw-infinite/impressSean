@@ -150,7 +150,6 @@ function RouteComponent() {
 	const { user, loading, logout } = useAuth();
 	const navigate = useNavigate();
 
-	console.log(user);
 	useEffect(() => {
 		if (!user && !loading) navigate({ to: "/", replace: true });
 	}, [user, navigate]);
