@@ -35,14 +35,14 @@ function useAppwrite(user: any) {
 			Query.equal("userId", user.$id),
 			Query.orderDesc("updatedAt"),
 			Query.limit(100),
-		])
+		]);
 		return res.documents.map((d) => ({
 			id: d.$id,
 			name: d.name,
 			createdAt: d.createdAt,
 			updatedAt: d.updatedAt,
 			thumbnailColor: d.thumbnailColor,
-		}))
+		}));
 	}, [user]);
 
 	const getProject = useCallback(async (id: string): Promise<Project> => {
@@ -59,7 +59,7 @@ function useAppwrite(user: any) {
 			connections: JSON.parse(doc.connections || "[]"),
 			comments: JSON.parse(doc.comments || "[]"),
 			activity: JSON.parse(doc.activity || "[]"),
-		})
+		});
 	}, []);
 
 	const saveProject = useCallback(
@@ -77,12 +77,12 @@ function useAppwrite(user: any) {
 				connections: JSON.stringify(proj.connections),
 				comments: JSON.stringify(proj.comments),
 				activity: JSON.stringify(proj.activity),
-			}
+			};
 			const perms = [
 				Permission.read(Role.user(user.$id)),
 				Permission.update(Role.user(user.$id)),
 				Permission.delete(Role.user(user.$id)),
-			]
+			];
 			try {
 				await databases.getDocument(DB_ID, COL_ID, proj.id);
 				await databases.updateDocument(DB_ID, COL_ID, proj.id, payload, perms);
@@ -91,7 +91,7 @@ function useAppwrite(user: any) {
 			}
 		},
 		[user],
-	)
+	);
 
 	const createProject = useCallback(
 		async (
@@ -113,16 +113,16 @@ function useAppwrite(user: any) {
 				connections: "[]",
 				comments: "[]",
 				activity: JSON.stringify(p.activity),
-			}
+			};
 			const doc = await databases.createDocument(DB_ID, COL_ID, p.id, payload, [
 				Permission.read(Role.user(user.$id)),
 				Permission.update(Role.user(user.$id)),
 				Permission.delete(Role.user(user.$id)),
-			])
+			]);
 			return doc.$id;
 		},
 		[user],
-	)
+	);
 
 	const deleteProject = useCallback(async (id: string) => {
 		await databases.deleteDocument(DB_ID, COL_ID, id);
@@ -137,7 +137,7 @@ function useAppwrite(user: any) {
 			deleteProject,
 		}),
 		[getProjects, getProject, saveProject, createProject, deleteProject],
-	)
+	);
 }
 
 export const Route = createFileRoute("/page")({
@@ -177,11 +177,11 @@ function RouteComponent() {
 			} finally {
 				if (!cancelled) setLoaded(true);
 			}
-		})()
+		})();
 		// Cleanup so an in-flight async block from an old user session doesn't set state
 		return () => {
 			cancelled = true;
-		}
+		};
 	}, [user]);
 
 	const loadProject = useCallback(
@@ -191,7 +191,7 @@ function RouteComponent() {
 			setActiveProjectId(id);
 		},
 		[appwrite],
-	)
+	);
 
 	const saveActiveProject = useCallback(
 		async (proj: Project) => {
@@ -206,12 +206,12 @@ function RouteComponent() {
 						? { ...p, name: toSave.name, updatedAt: toSave.updatedAt }
 						: p,
 				),
-			)
+			);
 			setSaveStatus("saved");
 			setTimeout(() => setSaveStatus("idle"), 1200);
 		},
 		[appwrite],
-	)
+	);
 
 	const handleCreateProject = useCallback(
 		async (
@@ -224,7 +224,7 @@ function RouteComponent() {
 				name || "Untitled project",
 				canvasWidth,
 				canvasHeight,
-			)
+			);
 			const seed = buildTemplateSeed(template);
 			const base = await appwrite.getProject(id);
 			const seeded: Project = {
@@ -232,7 +232,7 @@ function RouteComponent() {
 				elements: seed.elements,
 				connections: seed.connections,
 				comments: seed.comments,
-			}
+			};
 			await appwrite.saveProject(seeded);
 			setProjects(await appwrite.getProjects());
 			setActiveProject(seeded);
@@ -240,7 +240,7 @@ function RouteComponent() {
 			setView("editor");
 		},
 		[appwrite],
-	)
+	);
 
 	const deleteProject = useCallback(
 		async (id: string) => {
@@ -253,7 +253,7 @@ function RouteComponent() {
 			}
 		},
 		[appwrite, activeProjectId],
-	)
+	);
 
 	const importProject = useCallback(
 		async (file: File) => {
@@ -265,7 +265,7 @@ function RouteComponent() {
 			setView("editor");
 		},
 		[appwrite],
-	)
+	);
 
 	if (!loaded) {
 		return (
@@ -279,7 +279,7 @@ function RouteComponent() {
 			>
 				Loading workspace…
 			</div>
-		)
+		);
 	}
 
 	return (
@@ -335,5 +335,5 @@ function RouteComponent() {
 				<Reports project={activeProject} allProjects={projects} />
 			)}
 		</div>
-	)
+	);
 }
