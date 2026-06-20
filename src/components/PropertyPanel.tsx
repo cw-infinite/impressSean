@@ -627,26 +627,26 @@ export function SelectedElementPanel({
 
 export function generateCSS(el: CanvasElement) {
 	const base = `position: absolute;
-	left: ${el.x}px;
-	top: ${el.y}px;
-	width: ${el.w}px;
-	height: ${el.h}px;
-	opacity: ${el.style.opacity / 100};
-	transform: rotate(${el.style.rotation}deg);
-	background: ${el.fill};`;
+left: ${el.x}px;
+top: ${el.y}px;
+width: ${el.w}px;
+height: ${el.h}px;
+opacity: ${el.style.opacity / 100};
+transform: rotate(${el.style.rotation}deg);
+background: ${el.fill};`;
 
 	if (el.type === "text") {
 		const t = el.typography;
 		return (
 			base +
-			`font-family: '${t.fontFamily}', sans-serif;
-			font-size: ${t.fontSize}px;
-			font-weight: ${t.fontWeight};
-			line-height: ${t.lineHeight};
-			letter-spacing: ${t.letterSpacing}px;
-			text-align: ${t.textAlign};
-			color: ${el.fill};
-			white-space: pre-wrap;`
+`font-family: '${t.fontFamily}', sans-serif;
+font-size: ${t.fontSize}px;
+font-weight: ${t.fontWeight};
+line-height: ${t.lineHeight};
+letter-spacing: ${t.letterSpacing}px;
+text-align: ${t.textAlign};
+color: ${el.fill};
+white-space: pre-wrap;`
 		);
 	}
 
@@ -660,7 +660,7 @@ export function generateCSS(el: CanvasElement) {
 
 	return (
 		base + `${borderRule}
-		border-radius: ${el.style.borderRadius}px;${shadowRule ? `\n${shadowRule}` : ""}`
+border-radius: ${el.style.borderRadius}px;${shadowRule ? `\n${shadowRule}` : ""}`
 	);
 }
 

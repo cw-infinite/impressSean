@@ -136,12 +136,12 @@ export function TopBar({
 					>
 						<MousePointer2 size={14} /> Editor
 					</button>
-					<button
+					{/* <button
 						onClick={() => setView("reports")}
 						style={view === "reports" ? btnActive : btnGhost}
 					>
 						<BarChart3 size={14} /> Reports
-					</button>
+					</button> */}
 					<div style={{ width: 1, height: 20, background: "#e5e7eb" }} />
 					<div ref={exportMenuRef} style={{ position: "relative" }}>
 						<button
